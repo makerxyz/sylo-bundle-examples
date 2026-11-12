@@ -1,0 +1,18 @@
+{
+  "sylo": 1,
+  "kind": "app",
+  "id": "example-list",
+  "version": 1,
+  "title": "Example list",
+  "subtitle": "A short list you keep",
+  "description": "Add things to a list, tick them off and clear what is done. It keeps its rows on your Sylo, sealed.",
+  "by": "Your Sylo",
+  "can": ["Keep a list of things you add", "Tick things off"],
+  "cannot": ["Reach the internet", "Read anything else of yours"],
+  "app": {
+    "view": "view/index.html",
+    "place": "sidebar",
+    "capabilities": [],
+    "tables": { "items": { "fields": { "text": { "type": "text", "max": 200, "required": true }, "done": { "type": "boolean" } } } }
+  }
+}

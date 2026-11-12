@@ -1,0 +1,13 @@
+{
+  "sylo": 1,
+  "kind": "skill",
+  "id": "example-weekly-review",
+  "version": 1,
+  "title": "Example weekly review",
+  "subtitle": "Sunday wrap-up of the week",
+  "description": "Looks back over the week's tasks, journal and calendar and drafts next week's three priorities.",
+  "by": "Your Sylo",
+  "can": ["Read your tasks and calendar"],
+  "cannot": ["Send or share anything"],
+  "skill": { "asks": ["Do my weekly review"], "words": ["weekly review", "week in review"] }
+}

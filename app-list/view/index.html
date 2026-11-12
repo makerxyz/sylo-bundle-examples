@@ -1,0 +1,50 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { color-scheme: light dark; --ink: #1c1c1e; --soft: #6b6b73; --line: #e3e3e8; --accent: #5b5bd6; --bg: #fff; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #f2f2f7; --soft: #9a9aa3; --line: #2c2c31; --accent: #8c8cf0; --bg: #000; } }
+  body { margin: 0; padding: 16px; font: 16px/1.4 -apple-system, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+  form { display: flex; gap: 8px; margin-bottom: 12px; }
+  input[type=text] { flex: 1; font: inherit; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: inherit; }
+  button { font: inherit; padding: 10px 14px; border-radius: 12px; border: 0; background: var(--accent); color: #fff; }
+  li { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); list-style: none; }
+  ul { margin: 0; padding: 0; }
+  .done span { color: var(--soft); text-decoration: line-through; }
+  .empty { color: var(--soft); padding: 24px 0; text-align: center; }
+</style>
+<form id="add"><input id="text" type="text" placeholder="Add something" maxlength="200" autocomplete="off"><button type="submit">Add</button></form>
+<ul id="rows"></ul>
+<script>
+  const items = sylo.db.table("items");
+  const rows = document.getElementById("rows");
+  async function draw() {
+    const list = await items.list();
+    const all = Array.isArray(list) ? list : (list && list.rows) || [];
+    rows.textContent = "";
+    if (all.length === 0) {
+      rows.innerHTML = '<li class="empty">Nothing here yet.</li>';
+      return;
+    }
+    for (const row of all) {
+      const li = document.createElement("li");
+      li.className = row.done ? "done" : "";
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = !!row.done;
+      box.onchange = async () => { await items.update(row.id, { done: box.checked }); draw(); };
+      const label = document.createElement("span");
+      label.textContent = row.text;
+      li.append(box, label);
+      rows.append(li);
+    }
+  }
+  document.getElementById("add").onsubmit = async (event) => {
+    event.preventDefault();
+    const field = document.getElementById("text");
+    if (field.value.trim() === "") return;
+    await items.add({ text: field.value.trim(), done: false });
+    field.value = "";
+    draw();
+  };
+  draw();
+</script>
